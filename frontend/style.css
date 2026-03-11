@@ -1,0 +1,304 @@
+*{
+box-sizing:border-box;
+margin:0;
+padding:0;
+-webkit-tap-highlight-color: transparent;
+}
+
+:root{
+
+--bg-main:#ffe6f5;
+--bg-secondary:#ffd6f0;
+--bg-card:#fff0fa;
+
+--accent1:#ff4da6;
+--accent2:#b066ff;
+
+--text-main:#3a003a;
+--text-secondary:#7a4a7a;
+
+--glass:rgba(255,255,255,0.6);
+--border:rgba(255,0,150,0.15);
+
+--transition:0.25s ease;
+
+}
+
+/* base */
+
+body{
+font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;
+background:linear-gradient(135deg,#ffd6f0,#f2c9ff,#ffd6f0);
+color:var(--text-main);
+min-height:100vh;
+display:flex;
+flex-direction:column;
+}
+
+/* layout */
+
+.container{
+flex:1;
+width:100%;
+max-width:1200px;
+margin:auto;
+padding:30px 20px 120px;
+}
+
+/* title */
+
+.main h1{
+margin-bottom:30px;
+font-size:28px;
+font-weight:600;
+}
+
+/* song grid */
+
+.song-list{
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(170px,1fr));
+gap:24px;
+}
+
+/* song cards */
+
+.song-card{
+background:var(--bg-card);
+border-radius:16px;
+padding:16px;
+cursor:pointer;
+border:1px solid var(--border);
+transition:var(--transition);
+position:relative;
+overflow:hidden;
+box-shadow:0 6px 18px rgba(255,0,150,0.1);
+}
+
+.song-card::before{
+content:"";
+position:absolute;
+inset:0;
+background:linear-gradient(120deg,var(--accent1),var(--accent2));
+opacity:0;
+transition:var(--transition);
+}
+
+.song-card:hover::before{
+opacity:0.12;
+}
+
+.song-card:hover{
+transform:translateY(-6px) scale(1.02);
+box-shadow:0 12px 30px rgba(255,0,150,0.25);
+}
+
+.song-card img{
+width:100%;
+border-radius:12px;
+margin-bottom:10px;
+}
+
+.song-card h3{
+font-size:15px;
+margin-bottom:4px;
+}
+
+.song-card p{
+font-size:13px;
+color:var(--text-secondary);
+}
+
+/* player */
+
+.player{
+position:fixed;
+bottom:0;
+left:0;
+width:100%;
+
+background:rgba(255,240,250,0.9);
+backdrop-filter:blur(12px);
+
+border-top:1px solid var(--border);
+
+padding:14px 20px;
+
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:20px;
+}
+
+/* song info */
+
+.song-info{
+display:flex;
+align-items:center;
+gap:14px;
+min-width:160px;
+}
+
+.song-info img{
+width:52px;
+height:52px;
+border-radius:42px;
+object-fit:cover;
+
+animation:spin 8s linear infinite;
+animation-play-state:paused;
+
+box-shadow:0 0 15px rgba(255,77,166,0.4);
+}
+
+.playing img{
+animation-play-state:running;
+}
+
+.song-info h4{
+font-size:14px;
+}
+
+.song-info p{
+font-size:12px;
+color:var(--text-secondary);
+}
+
+/* controls */
+
+.controls{
+display:flex;
+align-items:center;
+gap:16px;
+}
+
+.controls button{
+border:none;
+background:linear-gradient(45deg,var(--accent1),var(--accent2));
+color:white;
+
+font-size:15px;
+
+width:42px;
+height:42px;
+
+border-radius:50%;
+
+cursor:pointer;
+
+transition:var(--transition);
+
+box-shadow:0 6px 20px rgba(255,77,166,0.35);
+}
+
+.controls button:hover{
+transform:scale(1.15);
+box-shadow:0 0 24px rgba(255,77,166,0.6);
+}
+
+/* progress */
+
+.progress-area{
+display:flex;
+align-items:center;
+gap:10px;
+flex:1;
+max-width:420px;
+}
+
+.progress-area span{
+font-size:12px;
+color:var(--text-secondary);
+min-width:38px;
+}
+
+#progress{
+appearance:none;
+height:6px;
+border-radius:10px;
+background:linear-gradient(90deg,var(--accent1),var(--accent2));
+cursor:pointer;
+flex:1;
+}
+
+#progress::-webkit-slider-thumb{
+appearance:none;
+width:14px;
+height:14px;
+background:white;
+border-radius:50%;
+box-shadow:0 0 10px rgba(255,77,166,0.7);
+}
+
+/* animation */
+
+@keyframes spin{
+from{transform:rotate(0)}
+to{transform:rotate(360deg)}
+}
+
+/* tablet */
+
+@media (max-width:900px){
+
+.song-list{
+grid-template-columns:repeat(auto-fill,minmax(140px,1fr));
+}
+
+}
+
+/* phone */
+
+@media (max-width:700px){
+
+.player{
+flex-direction:column;
+align-items:center;
+gap:12px;
+padding:16px;
+}
+
+.song-info{
+justify-content:center;
+text-align:center;
+}
+
+.controls{
+justify-content:center;
+}
+
+.progress-area{
+max-width:none;
+width:100%;
+}
+
+.container{
+padding-bottom:180px;
+}
+
+}
+
+/* small phones */
+
+@media (max-width:480px){
+
+.song-list{
+grid-template-columns:repeat(2,1fr);
+gap:16px;
+}
+
+.main h1{
+font-size:22px;
+}
+
+.song-info img{
+width:46px;
+height:46px;
+}
+
+.controls button{
+width:44px;
+height:44px;
+}
+
+}
