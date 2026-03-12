@@ -1,0 +1,59 @@
+{
+  "name": "lazytunes",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Manpreet109209/LazyTunes.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Manpreet109209/LazyTunes/issues"
+  },
+  "homepage": "https://github.com/Manpreet109209/LazyTunes#readme",
+  "dependencies": {
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "electron": "^41.0.0",
+    "electron-builder": "^26.8.1",
+    "nsis": "^0.0.0"
+  },
+  "build": {
+    "appId": "com.lazytunes.app",
+    "productName": "LazyTunes",
+    "files": [
+      "frontend/**/*",
+      "backend/**/*",
+      "assets/**/*",
+      "main.js",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "assets/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "LazyTunes"
+    }
+  }
+}

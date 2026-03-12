@@ -1,12 +1,20 @@
 const express = require("express");
 const fs = require("fs");
 const path = require("path");
+const os = require("os");
 
 const app = express();
 const PORT = 3000;
 
 const frontendPath = path.join(__dirname, "../frontend");
-const musicPath = path.join(__dirname, "../music");
+
+const homeDir = os.homedir();
+const appFolder = path.join(homeDir, "LazyTunes");
+const musicPath = path.join(appFolder, "music");
+
+if (!fs.existsSync(musicPath)) {
+    fs.mkdirSync(musicPath, { recursive: true });
+}
 
 /* serve frontend */
 
@@ -26,7 +34,7 @@ app.get("/songs", (req, res) => {
 }
 
 const songs = files
-.filter(file => file.endsWith(".mp3"))
+.filter(file => file.toLowerCase().endsWith(".mp3"))
 .map(file => {
 
 const title = file
