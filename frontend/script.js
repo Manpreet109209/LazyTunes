@@ -14,67 +14,77 @@ const durationEl = document.getElementById("duration");
 
 const player = document.querySelector(".player");
 const songList = document.querySelector(".song-list");
-const DEFAULT_COVER = "/img/default-cover.png";
+
+const DEFAULT_COVER = "img/default-cover.png";
 
 /* state */
 
 let songs = [];
+let songCards = [];
 let currentSong = 0;
 
 /* fetch songs from backend */
 
-async function loadSongs(){
-  try{
+async function loadSongs() {
+  try {
 
-  const res = await fetch("/songs");
+    const res = await fetch("/songs");
 
-  if(!res.ok){
-  throw new Error("Failed to fetch songs");
-}
+    if (!res.ok) {
+      throw new Error("Failed to fetch songs");
+    }
 
-const data = await res.json();
+    const data = await res.json();
 
-songs = [];
-songList.innerHTML = "";
+    songs = [];
+    songCards = [];
+    songList.innerHTML = "";
 
-data.forEach((song, index)=>{
+    data.forEach((song, index) => {
 
-  songs.push({
-    src: song.path,
-    title: song.title,
-    artist: "Unknown Artist",
-    cover: DEFAULT_COVER
-  });
+      const songData = {
+        src: song.path,
+        title: song.title,
+        artist: song.artist || "Unknown Artist",
+        cover: song.cover || DEFAULT_COVER
+      };
 
-  const card = document.createElement("div");
-  card.className = "song-card";
-  const songData = songs[index];
+      songs.push(songData);
 
-  card.innerHTML = `
-  <img src="${songData.cover}">
-  <h3>${songData.title}</h3>
-  <p>${songData.artist}</p>
-  `;
+      const card = document.createElement("div");
+      card.className = "song-card";
 
-  card.addEventListener("click",()=>{
-  loadSong(index);
-  playSong();
-  });
+      card.innerHTML = `
+        <img src="${songData.cover}" onerror="this.src='img/default-cover.png'">
+        <h3>${songData.title}</h3>
+        <p>${songData.artist}</p>
+      `;
 
-  songList.appendChild(card);
+      card.addEventListener("click", () => {
+        loadSong(index);
+        playSong();
+      });
 
-});
+      songCards.push(card);
+      songList.appendChild(card);
 
-  } catch(err){
-    console.error("Song loading error:",err);
+    });
+
+    if (songs.length > 0) {
+      loadSong(0);
+    }
+
+  } catch (err) {
+
+    console.error("Song loading error:", err);
     songList.innerHTML = "<p>Failed to load songs</p>";
-  }
 
+  }
 }
 
 /* load song */
 
-function loadSong(index){
+function loadSong(index) {
 
   currentSong = index;
 
@@ -86,11 +96,27 @@ function loadSong(index){
   artist.innerText = song.artist;
   cover.src = song.cover;
 
+  updateActiveCard();
+
+}
+
+/* highlight playing card */
+
+function updateActiveCard() {
+
+  songCards.forEach(card => {
+    card.classList.remove("playing");
+  });
+
+  if (songCards[currentSong]) {
+    songCards[currentSong].classList.add("playing");
+  }
+
 }
 
 /* play */
 
-function playSong(){
+function playSong() {
 
   audio.play();
 
@@ -101,7 +127,7 @@ function playSong(){
 
 /* pause */
 
-function pauseSong(){
+function pauseSong() {
 
   audio.pause();
 
@@ -112,21 +138,21 @@ function pauseSong(){
 
 /* play toggle */
 
-playBtn.addEventListener("click",()=>{
+playBtn.addEventListener("click", () => {
 
-if(audio.paused){
-  playSong();
+  if (audio.paused) {
+    playSong();
   } else {
-  pauseSong();
+    pauseSong();
   }
 
 });
 
 /* progress bar */
 
-audio.addEventListener("timeupdate",()=>{
+audio.addEventListener("timeupdate", () => {
 
-  if(!audio.duration) return;
+  if (!audio.duration) return;
 
   progress.value = (audio.currentTime / audio.duration) * 100;
 
@@ -137,9 +163,9 @@ audio.addEventListener("timeupdate",()=>{
 
 /* seek */
 
-progress.addEventListener("input",()=>{
+progress.addEventListener("input", () => {
 
-  if(!audio.duration) return;
+  if (!audio.duration) return;
 
   audio.currentTime = (progress.value / 100) * audio.duration;
 
@@ -147,20 +173,18 @@ progress.addEventListener("input",()=>{
 
 /* auto next */
 
-audio.addEventListener("ended",()=>{
-
+audio.addEventListener("ended", () => {
   nextSong();
-
 });
 
 /* next */
 
-function nextSong(){
+function nextSong() {
 
   currentSong++;
 
-  if(currentSong >= songs.length){
-  currentSong = 0;
+  if (currentSong >= songs.length) {
+    currentSong = 0;
   }
 
   loadSong(currentSong);
@@ -170,12 +194,12 @@ function nextSong(){
 
 /* previous */
 
-function prevSong(){
+function prevSong() {
 
   currentSong--;
 
-  if(currentSong < 0){
-  currentSong = songs.length - 1;
+  if (currentSong < 0) {
+    currentSong = songs.length - 1;
   }
 
   loadSong(currentSong);
@@ -185,12 +209,12 @@ function prevSong(){
 
 /* time formatter */
 
-function formatTime(time){
+function formatTime(time) {
 
   const minutes = Math.floor(time / 60);
   const seconds = Math.floor(time % 60)
-  .toString()
-  .padStart(2,"0");
+    .toString()
+    .padStart(2, "0");
 
   return `${minutes}:${seconds}`;
 

@@ -45,7 +45,7 @@ const title = file
 return {
     title: title,
     artist: "Unknown Artist",
-    cover: "/img/default.jpg",
+    cover: "/img/default-cover.png",
     path: `/music/${file}`
 };
 
